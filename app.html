@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Mood-Based Color Palette Generator</title>
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #222;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 40px;
+    }
+
+    h1 {
+        margin-bottom: 10px;
+        letter-spacing: 1px;
+    }
+
+    .controls {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 25px;
+    }
+
+    select, button {
+        padding: 10px 15px;
+        border-radius: 6px;
+        border: none;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    select {
+        background: #333;
+        color: white;
+    }
+
+    button {
+        background: #444;
+        color: white;
+        transition: 0.2s;
+    }
+
+    button:hover {
+        background: #666;
+    }
+
+    .palette {
+        display: flex;
+        gap: 12px;
+        margin-top: 20px;
+    }
+
+    .color {
+        width: 120px;
+        height: 120px;
+        border-radius: 10px;
+        position: relative;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+
+    .color:hover {
+        transform: scale(1.05);
+    }
+
+    .hex {
+        position: absolute;
+        bottom: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0,0,0,0.5);
+        padding: 5px 8px;
+        border-radius: 6px;
+        font-size: 14px;
+    }
+
+    #message {
+        margin-top: 15px;
+        opacity: 0;
+        transition: opacity 0.4s ease;
+    }
+
+    nav {
+    background-color: #454444;   /* Gray bar */
+    padding: 10px 0;
+    width: 100%;
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    display: flex;               /* Horizontal layout */
+    justify-content: center;     /* Center the links */
+    gap: 30px;                   /* Space between links */
+}
+
+nav a {
+    text-decoration: none;
+    color: #fefcfc;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+nav a:hover {
+    color: #000;
+    text-decoration: underline;
+}
+</style>
+</head>
+<body>
+
+<nav >
+    <div >
+        <div>
+            <ul>
+                <li ><a href="index.html">Resume</a></li>
+                <li ><a href="iceskating.html">Ice skating</a></li>
+                <li> <a href="app.html">App Page</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<h1>Mood-Based Color Palette Generator</h1>
+
+<div class="controls">
+    <select id="mood">
+        <option value="calm">Calm</option>
+        <option value="adventurous">Adventurous</option>
+        <option value="romantic">Romantic</option>
+        <option value="chaotic">Chaotic</option>
+    </select>
+
+    <button onclick="generatePalette()">Generate</button>
+    <button onclick="randomPalette()">Random</button>
+</div>
+
+<div class="palette" id="palette"></div>
+
+<p id="message">Copied!</p>
+
+<script>
+const moodColors = {
+    calm: ["#A8DADC", "#457B9D", "#1D3557", "#BEE1E6", "#89C2D9"],
+    adventurous: ["#FF6B6B", "#F06543", "#F7B801", "#00A6FB", "#0081A7"],
+    romantic: ["#FFB5C2", "#FF6F91", "#FFC2D1", "#FCE4EC", "#D7263D"],
+    chaotic: ["#FF0000", "#00FF00", "#0000FF", "#FFD700", "#FF00FF"]
+};
+
+function generatePalette() {
+    const mood = document.getElementById("mood").value;
+    displayPalette(moodColors[mood]);
+}
+
+function randomPalette() {
+    let colors = [];
+    for (let i = 0; i < 5; i++) {
+        colors.push("#" + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0'));
+    }
+    displayPalette(colors);
+}
+
+function displayPalette(colors) {
+    const paletteDiv = document.getElementById("palette");
+    paletteDiv.innerHTML = "";
+
+    colors.forEach(color => {
+        const div = document.createElement("div");
+        div.className = "color";
+        div.style.background = color;
+
+        div.onclick = () => copyColor(color);
+
+        const hex = document.createElement("span");
+        hex.className = "hex";
+        hex.textContent = color;
+
+        div.appendChild(hex);
+        paletteDiv.appendChild(div);
+    });
+}
+
+function copyColor(hex) {
+    navigator.clipboard.writeText(hex);
+    const msg = document.getElementById("message");
+    msg.style.opacity = 1;
+    setTimeout(() => msg.style.opacity = 0, 1000);
+}
+
+// Initial palette on load
+generatePalette();
+</script>
+
+</body>
+</html>
